@@ -1,44 +1,52 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 # Create your views here.
 
-
+from .models import Post
 def post_create(request):
 	context = {
-	"title": "create"
-	}
-	return HttpResponse("<h1>Create!</h1>")
-
-
-
-def post_detail(request):
-	context = {
-	"title": "detail"
+	"title": "Your create function"
 	}
 	return render(request, "index.html", context)
 
+
+
+def post_detail(request, id):
+	instance = get_object_or_404(Post, id=id)
+	context = {
+		"title": "instance.title"
+	}
+	return render(request, "post_detail.html", context)
+
 def post_list(request):
 	if request.user.is_authenticated():
+		queryset = Post.objects.all()
 		context = {
-			"title": "personal list"
+			"object_list": queryset,
+			"title": "The list"
 		}
-		return render(request, "index.html", context)
 	else:
 		context = {
-			"title": "list"
+		"object_list": "You're not authenticated. Shame.",
+		"title": "The List"
 		}
-		return render(request, "index.html", context)
+#		return render(request, "index.html", context)
+#	else:
+#		context = {
+#			"title": "The list view"
+#		}
+	return render(request, "index.html", context)
 	#return HttpResponse("<h1>List!</h1>")
 
 def post_update(request):
 	context = {
-	"title": "update"
+	"title": "The update function"
 	}
-	return HttpResponse("<h1>Update!</h1>")
+	return render(request, "index.html", context)
 
 def post_delete(request):
 	context = {
-	"title": "Delete"
+	"title": "Your delete function"
 	}
-	return HttpResponse("<h1>Delete!</h1>")
+	return render(request, "index.html", context)
