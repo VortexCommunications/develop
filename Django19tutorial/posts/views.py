@@ -6,7 +6,9 @@ from .models import Post
 
 def post_create(request):
 	if request.user.is_authenticated():
-		form = PostForm()
+		form = PostForm(request.POST)
+		if form.is_valid():
+			instance = form.save(commit=False)
 		context = {
 		"form": form, 
 		"title": "Your create function"
@@ -36,17 +38,21 @@ def post_list(request):
 		}
 	else:
 		context = {
-		"object_list": "You're not authenticated. Shame.",
+		"shame": "You haven't logged in!",
+		"object_list": "shame",
 		"title": "The List"
 		}
 	return render(request, "index.html", context)
 	#return HttpResponse("<h1>List!</h1>")
 
-def post_update(request):
+def post_update(request, id):
+	instance = get_object_or_404(Post, id=id)
 	context = {
-	"title": "The update function"
+		"title": instance.title,
+		"instance": instance,
 	}
-	return render(request, "index.html", context)
+	return render(request, "form.html", context)
+
 
 def post_delete(request):
 	context = {
