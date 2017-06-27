@@ -1,21 +1,29 @@
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 
-# Create your views here.
-
+from .forms import PostForm
 from .models import Post
-def post_create(request):
-	context = {
-	"title": "Your create function"
-	}
-	return render(request, "index.html", context)
 
+def post_create(request):
+	if request.user.is_authenticated():
+		form = PostForm()
+		context = {
+		"form": form, 
+		"title": "Your create function"
+		}
+		return render(request, "post_form.html", context)
+	else:
+		context= {
+		"form": "Log in",
+		"title": "log in"
+		}
 
 
 def post_detail(request, id):
 	instance = get_object_or_404(Post, id=id)
 	context = {
-		"title": "instance.title"
+		"title": instance.title,
+		"instance": instance,
 	}
 	return render(request, "post_detail.html", context)
 
@@ -31,11 +39,6 @@ def post_list(request):
 		"object_list": "You're not authenticated. Shame.",
 		"title": "The List"
 		}
-#		return render(request, "index.html", context)
-#	else:
-#		context = {
-#			"title": "The list view"
-#		}
 	return render(request, "index.html", context)
 	#return HttpResponse("<h1>List!</h1>")
 
