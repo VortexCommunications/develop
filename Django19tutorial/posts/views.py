@@ -1,4 +1,6 @@
+from django.contrib import messages
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 
 from .forms import PostForm
@@ -11,6 +13,10 @@ def post_create(request):
 			instance = form.save(commit=False)
 			print form.cleaned_data.get("title")
 			instance.save()
+			messages.success(request, "Your post has been published.", extra_tags='Success')
+			return HttpResponseRedirect(instance.get_absolute_url())
+		else:
+			messages.error(request, "Couldn't publish the post.", extra_tags='Failure')
 		context = {
 		"form": form, 
 		"title": "Your create function",
@@ -49,19 +55,28 @@ def post_list(request):
 	return render(request, "index.html", context)
 
 def post_update(request, id=None):
-	instance = get_object_or_404(Post, id=id)
-	form = PostForm(request.POST or None, instance=instance)
-	if form.is_valid():
-		instance = form.save(commit=False)
-		instance.save()
-
-	context = {
-		"title": instance.title,
-		"instance": instance,
-		"form": form,
-		"button": 'Update post'
-	}
-	return render(request, "post_form.html", context)
+		if request.user.is_authenticated():
+			instance = get_object_or_404(Post, id=id)
+			form = PostForm(request.POST or None, instance=instance)
+			if form.is_valid():
+				instance = form.save(commit=False)
+				instance.save()
+				messages.success(request, "Edits saved.", extra_tags='Success')
+				return HttpResponseRedirect(instance.get_absolute_url())
+			context = {
+			"title": instance.title,
+			"instance": instance,
+			"form": form,
+			"button": 'Update'
+		}
+		else:
+			context = {
+			"title": "Log in!",
+			"instance": "Log in!",
+			"form": "log in!",
+			"button": "Log in!",
+		}
+		return render(request, "post_form.html", context)
 
 
 def post_delete(request):
