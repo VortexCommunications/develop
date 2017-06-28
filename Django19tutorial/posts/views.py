@@ -6,13 +6,14 @@ from .models import Post
 
 def post_create(request):
 	if request.user.is_authenticated():
-		form = PostForm(request.POST or NONE)
+		form = PostForm(request.POST or None)
 		if form.is_valid():
 			instance = form.save(commit=False)
 			instance.save()
 		context = {
 		"form": form, 
-		"title": "Your create function"
+		"title": "Your create function",
+		"theTitle": "Write post",
 		}
 		return render(request, "post_form.html", context)
 	else:
