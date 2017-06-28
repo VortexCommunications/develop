@@ -6,9 +6,10 @@ from .models import Post
 
 def post_create(request):
 	if request.user.is_authenticated():
-		form = PostForm(request.POST)
+		form = PostForm(request.POST or NONE)
 		if form.is_valid():
 			instance = form.save(commit=False)
+			instance.save()
 		context = {
 		"form": form, 
 		"title": "Your create function"
