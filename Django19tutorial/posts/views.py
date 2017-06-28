@@ -9,11 +9,13 @@ def post_create(request):
 		form = PostForm(request.POST or None)
 		if form.is_valid():
 			instance = form.save(commit=False)
+			print form.cleaned_data.get("title")
 			instance.save()
 		context = {
 		"form": form, 
 		"title": "Your create function",
 		"theTitle": "Write post",
+		"button": "Submit post"
 		}
 		return render(request, "post_form.html", context)
 	else:
@@ -45,15 +47,21 @@ def post_list(request):
 		"title": "The List"
 		}
 	return render(request, "index.html", context)
-	#return HttpResponse("<h1>List!</h1>")
 
-def post_update(request, id):
+def post_update(request, id=None):
 	instance = get_object_or_404(Post, id=id)
+	form = PostForm(request.POST or None, instance=instance)
+	if form.is_valid():
+		instance = form.save(commit=False)
+		instance.save()
+
 	context = {
 		"title": instance.title,
 		"instance": instance,
+		"form": form,
+		"button": 'Update post'
 	}
-	return render(request, "form.html", context)
+	return render(request, "post_form.html", context)
 
 
 def post_delete(request):
