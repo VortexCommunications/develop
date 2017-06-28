@@ -1,7 +1,6 @@
 from django.contrib import messages
-from django.http import HttpResponse
-from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404, redirect
 
 from .forms import PostForm
 from .models import Post
@@ -13,10 +12,8 @@ def post_create(request):
 			instance = form.save(commit=False)
 			print form.cleaned_data.get("title")
 			instance.save()
-			messages.success(request, "Your post has been published.", extra_tags='Success')
+			messages.success(request, "Your post has been published.", extra_tags='Success', 'html_safe')
 			return HttpResponseRedirect(instance.get_absolute_url())
-		else:
-			messages.error(request, "Couldn't publish the post.", extra_tags='Failure')
 		context = {
 		"form": form, 
 		"title": "Your create function",
@@ -52,7 +49,7 @@ def post_list(request):
 		"object_list": "shame",
 		"title": "The List"
 		}
-	return render(request, "index.html", context)
+	return render(request, "base.html", context)
 
 def post_update(request, id=None):
 		if request.user.is_authenticated():
@@ -61,7 +58,7 @@ def post_update(request, id=None):
 			if form.is_valid():
 				instance = form.save(commit=False)
 				instance.save()
-				messages.success(request, "Edits saved.", extra_tags='Success')
+				messages.success(request, "Edits saved.", extra_tags='Success', 'html_safe')
 				return HttpResponseRedirect(instance.get_absolute_url())
 			context = {
 			"title": instance.title,
@@ -79,8 +76,13 @@ def post_update(request, id=None):
 		return render(request, "post_form.html", context)
 
 
-def post_delete(request):
-	context = {
-	"title": "Your delete function"
-	}
-	return render(request, "index.html", context)
+def post_delete(request, id=None):
+	instance = get_object_or_404(Post, id=id)
+	instance.delete()
+	messages.success(request, "Successfully deleted")
+	return redirect("posts:list")
+
+
+
+
+

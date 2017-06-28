@@ -1,0 +1,40 @@
+<!--DOCTYPE html -->
+<html>
+
+<head>
+<title>
+
+{% block head_title %}Try Django 1.9{% endblock head_title %}
+
+</title>
+</head>
+
+<body>
+{% include "messages_display.html" %}
+<div class='container'>
+{% block content %}
+<h1>{{title}} works, no need to hold your breath.</h1>
+{% for obj in object_list%}
+
+/posts/id/
+
+{% url "posts:detail" id=obj.id %}
+
+<a href='{{ obj.get_absolute_url }}'>{{ obj.title }}</a><br/>
+
+{{ obj.content }}<br/>
+
+{{ obj.timestamp }}<br/>
+
+{{ obj.updated }}<br/>
+
+{{ obj.id }}<br/>
+
+
+{% endfor %}
+
+{% endblock content%}
+
+</body>
+
+</html>
