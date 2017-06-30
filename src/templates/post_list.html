@@ -5,11 +5,11 @@
 <div class='row'>
 {% for obj in object_list %}
 
-  <div class="col-sm-12">
-    <div cl ass="thumbnail">
+  <div class="col-sm-6">
+    <div class="thumbnail">
       <!-- <img src="..." alt="..."> -->
       <div class="caption">
-        <h3><a href='{{ obj.get_absolute_url }}'>{{ obj.title }}</a> <small>{{ obj.timestamp|timesince }} ago</small></h3>
+        <h3><a href='{{ obj.get_absolute_url }}'>{{ obj.title }}</a> <small>{{ obj.timestamp|timesince }}</small></h3>
         <p>{{ obj.content|linebreaks|truncatechars:120 }}</p>
         <p><a href="{{ obj.get_absolute_url }}" class="btn btn-primary" role="button">View</a></p>
       </div>
@@ -17,7 +17,7 @@
   </div>
 
 
-{% cycle "" "</div><div class='row'>"}
+{% cycle "" "</div><div class='row'>" %}
 {% endfor %}
 </div>
 
