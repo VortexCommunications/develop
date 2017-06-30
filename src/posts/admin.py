@@ -3,8 +3,8 @@ from django.contrib import admin
 # Register your models here.
 from .models import Post
 
-class PostAdmin(admin.ModelAdmin):
-	list_display = ["title", "timestamp", "updated"]
+class PostModelAdmin(admin.ModelAdmin):
+	list_display = ["title", "updated", "timestamp"]
 	list_display_links = ["updated"]
 	list_editable = ["title"]
 	list_filter = ["updated", "timestamp"]
@@ -14,4 +14,4 @@ class PostAdmin(admin.ModelAdmin):
 		model = Post
 
 
-admin.site.register(Post, PostAdmin)
+admin.site.register(Post, PostModelAdmin)

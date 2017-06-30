@@ -12,13 +12,13 @@ def post_create(request):
 			instance = form.save(commit=False)
 			print form.cleaned_data.get("title")
 			instance.save()
-			messages.success(request, "Your post has been published.", extra_tags='html_safe')
+			messages.success(request, "Your post has been published.")
 			return HttpResponseRedirect(instance.get_absolute_url())
 		context = {
-		"form": form, 
-		"title": "Your create function",
-		"theTitle": "Write post",
-		"button": "Submit post"
+			"form": form, 
+			"title": "Your create function",
+			"theTitle": "Write post",
+			"button": "Submit post"
 		}
 		return render(request, "post_form.html", context)
 	else:
@@ -37,18 +37,24 @@ def post_detail(request, id):
 	return render(request, "post_detail.html", context)
 
 def post_list(request):
-	if request.user.is_authenticated():
-		queryset = Post.objects.all()
-		context = {
-			"object_list": queryset,
-			"title": "The list"
-		}
-	else:
-		context = {
-		"object_list": "LOG IN!",
-		"title": "The List"
-		}
-	return render(request, "base.html", context)
+
+	queryset = Post.objects.all()
+	context = {
+	 		"object_list": queryset,
+	 		"title": "The list"
+	 		}
+	# if request.user.is_authenticated():
+	# 	queryset = Post.objects.all()
+	# 	context = {
+	# 		"object_list": queryset,
+	# 		"title": "The list"
+	# 	}
+	# else:
+	# 	context = {
+	# 	"object_list": "LOG IN!",
+	# 	"title": "The List"
+	# 	}
+	return render(request, "post_list.html", context)
 
 def post_update(request, id=None):
 		if request.user.is_authenticated():
@@ -57,7 +63,7 @@ def post_update(request, id=None):
 			if form.is_valid():
 				instance = form.save(commit=False)
 				instance.save()
-				messages.success(request, "Edits saved.", extra_tags= 'html_safe')
+				messages.success(request, "Edits saved.")
 				return HttpResponseRedirect(instance.get_absolute_url())
 			context = {
 			"title": instance.title,
